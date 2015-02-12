@@ -3,8 +3,22 @@ R session 1
 
 ## Intro
 
-What is md?
+The goals of these R sessions are:
 
+* teach BAM Team how to use the BAM database,
+* share R tricks and workflows for efficiency.
+
+Prerequisites:
+
+* have R installed (optionally Rstudio),
+* have few packages installed (`RODBC`, `mefa4`),
+* follow the code on GitHub, or clone/download the Rsessions project,
+
+Useful links if you are asking things like:
+
+* [What is R?](http://www.r-project.org/)
+* [What is GitHub?](https://github.com/about)
+* [What is Markdown?](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)
 
 ## How to access the BAM database?
 
@@ -63,5 +77,11 @@ It is possible to define queries as well:
 xy <- sqlQuery(con, paste("SELECT * FROM dbo_National_XY_V4_2015"))
 ```
 
+## Opening the toy database
+
+```R
+setwd("path/to/directory")
+load("BAM_V4_ToyVersion.Rdata")
+```
 
 
