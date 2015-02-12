@@ -39,7 +39,7 @@ library(RODBC)
 con <- odbcConnectAccess2007("c:/bam/BAM_BayneAccess.accdb")
 
 proj <- read.csv("c:/bam/mn_data/pcnt/National_Proj_Summary_V4_2015.csv")
-xy <- sqlFetch(con, "dbo_National_XY_V4_2015")
+xy <- sqlFetch(con, "dbo_NATIONAL_XY_Covariates_Peter")
 xy$SSMA_TimeStamp <- NULL
 pk <- sqlFetch(con, "dbo_National_PKEY_V4_2015")
 pk$SSMA_TimeStamp <- NULL
