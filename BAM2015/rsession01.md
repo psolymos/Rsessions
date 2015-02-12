@@ -19,7 +19,7 @@ However, there are prerequisites:
 
 So I put this here as reference:
 
-```
+```R
 library(RODBC)
 
 con <- odbcConnectAccess2007("c:/bam/BAM_BayneAccess.accdb")
@@ -57,9 +57,9 @@ save(BEH, DISINT, DURINT, DURMET, DISMET, SS, PCODE, PKEY, PCTBL,
     file="c:/Dropbox/teaching/Rsessions/BAM_V4_ToyVersion.Rdata")
 ```
 
-It is possible to define quieries as well:
+It is possible to define queries as well:
 
-```
+```R
 xy <- sqlQuery(con, paste("SELECT * FROM dbo_National_XY_V4_2015"))
 ```
 
