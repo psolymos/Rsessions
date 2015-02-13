@@ -77,6 +77,23 @@ It is possible to define queries as well:
 xy <- sqlQuery(con, paste("SELECT * FROM dbo_National_XY_V4_2015"))
 ```
 
+Key concepts:
+
+* relational/non-relational databases
+* primary key
+* table, field, row
+* SQL commands/queries
+
+Key principles:
+
+* store atomic values (it is easier to combine than to take apart),
+* do not correct raw data source, but:
+  - fix it on the fly and report to maintainer,
+  - implement alerts around the issue for next time,
+* keep things small and modular, recycle code (most errors are due to copy-pasting and not changing each copy)
+* robustness beats efficiency,
+* keep track of version and back up frequently.
+
 ## R quickstart
 
 R is a great calculator
@@ -210,11 +227,26 @@ summary(l)
 summary(d)
 ```
 
+Key concepts:
+
+* a matrix is a vector with `dim` attribute, elements are in same mode,
+* a data frame is a list where length of elements match and elements can be in different mode.
+
+Bonus track:
+```R
+str(lm(x ~ 1))
+str(summary(lm(x ~ 1)))
+```
+
 ## Opening the toy database
 
 ```R
-setwd("path/to/directory")
+ls()
+rm(list=ls())
+ls()
+setwd("c:/Dropbox/Public/") # change to your path
 load("BAM_V4_ToyVersion.Rdata")
+ls()
 ```
 
 
