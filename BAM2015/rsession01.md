@@ -68,13 +68,146 @@ PCTBL <- droplevels(pc[pc$PKEY %in% rpk,])
 PCTBL$SPECIES <- sample(PCTBL$SPECIES)
 
 save(BEH, DISINT, DURINT, DURMET, DISMET, SS, PCODE, PKEY, PCTBL,
-    file="c:/Dropbox/teaching/Rsessions/BAM_V4_ToyVersion.Rdata")
+    file="c:/Dropbox/Public/BAM_V4_ToyVersion.Rdata")
 ```
 
 It is possible to define queries as well:
 
 ```R
 xy <- sqlQuery(con, paste("SELECT * FROM dbo_National_XY_V4_2015"))
+```
+
+## R quickstart
+
+R is a great calculator
+```R
+1 + 2
+```
+
+Assign a value and print an object
+```R
+(x = 2)
+print(x)
+x == 2
+y <- x + 0.5
+y
+```
+
+Logical operators
+```R
+x == y
+x != y
+x < y
+x >= y
+```
+
+Vectors and sequences
+```R
+x <- c(1,2,3)
+x
+1:3
+
+rep(1, 5)
+rep(1:2, 5)
+rep(1:2, each=5)
+```
+
+Vector operations, recycling
+```R
+x + 0.5
+x * c(10, 11, 12, 13)
+```
+
+Indexing vectors, ordering
+```R
+x[1]
+x[1:2]
+x[x != 2]
+x[x == 2]
+x[x > 1 & x < 3]
+order(x, decreasing=TRUE)
+x[order(x, decreasing=TRUE)]
+```
+
+Character vectors, NA values, and sorting
+```R
+z <- c("b", "a", "c", NA)
+z[z == "a"]
+z[!is.na(z) & z == "a"]
+z[is.na(z) | z == "a"]
+is.na(z)
+which(is.na(z))
+sort(z)
+sort(z, na.last=TRUE)
+```
+
+Matrices and arrays
+```R
+(m <- matrix(1:12, 4, 3))
+matrix(1:12, 4, 3, byrow=TRUE)
+
+array(1:12, c(2,2,3))
+```
+
+Attribues
+```R
+dim(m)
+dim(m) <- NULL
+m
+dim(m) <- c(4,3)
+m
+dimnames(m) <- list(letters[1:4], LETTERS[1:3])
+m
+attributes(m)
+```
+
+Matrix indices
+```R
+m[1:2,]
+m[1,2]
+m[,2]
+m[,2,drop=FALSE]
+m[2]
+
+m[rownames(m) == "c",]
+m[rownames(m) != "c",]
+m[rownames(m) %in% c("a","c","e"),]
+m[!(rownames(m) %in% c("a","c","e")),]
+```
+
+Lists and indexing
+```R
+l <- list(m=m, x=x, z=z)
+l
+l$ddd <- sqrt(l$x)
+l[2:3]
+l[["ddd"]]
+```
+
+Data frames
+```R
+d <- data.frame(x=x, sqrtx=sqrt(x))
+d
+```
+
+Structure
+```R
+str(x)
+str(z)
+str(m)
+str(l)
+str(d)
+str(as.data.frame(m))
+str(as.list(d))
+```
+
+Summary
+```R
+summary(x)
+summary(z)
+summary(m)
+summary(l)
+summary(d)
 ```
 
 ## Opening the toy database
