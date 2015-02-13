@@ -314,4 +314,53 @@ head(SS$BOR)
 head(as.integer(SS$BOR))
 head(levels(SS$BOR)[as.integer(SS$BOR)])
 head(as.character(SS$BOR))
+
+levels(SS$BOR_LOC)
+table(SS$BOR_LOC)
+SS$BOR_LOC <- relevel(SS$BOR_LOC, "BOREAL")
+levels(SS$BOR_LOC)
+table(SS$BOR_LOC)
 ```
+
+Conditional evaluations, dummy variables
+```R
+summary(SS$CDNLCC05)
+table(SS$CDNLCC05)
+SS[SS$CDNLCC05 <= 0,]
+SS$CDNLCC05[SS$CDNLCC05 <= 0] <- NA
+summary(SS$CDNLCC05)
+
+SS$isBOR <- ifelse(SS$BOR == "BOREAL", 1L, 0L)
+str(SS$isBOR)
+with(SS, table(isBOR, BOR))
+```
+
+Subsetting
+```R
+dim(SS)
+SS <- SS[!is.na(SS$CDNLCC05),]
+dim(SS)
+
+table(SS$BOR_LOC)
+levels(SS$BOR_LOC)
+SS <- SS[SS$BOR_LOC != "B_ALPINE",]
+table(SS$BOR_LOC)
+levels(SS$BOR_LOC)
+SS$BOR_LOC <- droplevels(SS$BOR_LOC)
+table(SS$BOR_LOC)
+levels(SS$BOR_LOC)
+```
+Derived variables
+```R
+SS$sX <- (SS$X - mean(SS$X)) / sd(SS$X)
+plot(SS$X, SS$sX)
+SS$sTREE <- SS$TREE / max(SS$TREE)
+plot(SS$TREE, SS$sTREE)
+```
+
+Sneak peek
+
+* PKEY table and manipulating survey level attributes,
+* join operations,
+* summarizing point count table (2 and 3 way tables),
+* QPAD estimation overview.
