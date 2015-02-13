@@ -240,6 +240,7 @@ str(summary(lm(x ~ 1)))
 
 ## Opening the toy database
 
+Open up the little to ydatabase
 ```R
 ls()
 rm(list=ls())
@@ -249,4 +250,68 @@ load("BAM_V4_ToyVersion.Rdata")
 ls()
 ```
 
+Project summary table
+```R
+str(PCODE)
+head(PCODE)
+tail(PCODE)
+summary(PCODE)
+```
 
+Fixing some issues
+```R
+levels(PCODE$DISTMETH)
+levels(PCODE$DISTMETH) <- toupper(levels(PCODE$DISTMETH))
+DISMET
+levels(DISMET$DISTANCECODE)
+levels(DISMET$DISTANCECODE) <- gsub(" *$", "", levels(DISMET$DISTANCECODE))
+
+levels(PCODE$DURMETH)
+DURMET
+levels(DURMET$DURATIONCODE)
+levels(DURMET$DURATIONCODE) <- gsub(" *$", "", levels(DURMET$DURATIONCODE))
+```
+
+SS table (unique locations)
+```R
+str(SS)
+plot(SS$X, SS$Y)
+with(SS, plot(X, Y, col=BOR_LOC))
+legend("bottomleft", col=1:nlevels(SS$BOR_LOC), 
+    legend=levels(SS$BOR_LOC), pch=21)
+hist(SS$TREE)
+table(SS$PROV_STATE)
+plot(table(SS$PROV_STATE))
+barplot(table(SS$PROV_STATE))
+boxplot(X ~ BOR_LOC, SS)
+```
+
+Finding duplicates
+```R
+sum(duplicated(SS$SS))
+sum(duplicated(SS$PCODE))
+head(SS$PCODE)
+head(duplicated(SS$PCODE))
+```
+
+Manipulating factor levels
+```R
+SS$BOR <- SS$BOR_LOC
+levels(SS$BOR)[levels(SS$BOR) != "BOREAL"] <- "OUTSIDE"
+with(SS, table(BOR, BOR_LOC))
+
+table(SS$BOR)
+SS$BOR[SS$BOR_LOC == "HEMIBOREAL"] <- "HEMIBOREAL"
+table(SS$BOR, useNA="always")
+
+levels(SS$BOR) <- c(levels(SS$BOR), "HEMIBOREAL")
+table(SS$BOR)
+SS$BOR[SS$BOR_LOC == "HEMIBOREAL"] <- "HEMIBOREAL"
+table(SS$BOR)
+
+nlevels(SS$BOR)
+head(SS$BOR)
+head(as.integer(SS$BOR))
+head(levels(SS$BOR)[as.integer(SS$BOR)])
+head(as.character(SS$BOR))
+```
