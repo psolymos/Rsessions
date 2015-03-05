@@ -240,7 +240,7 @@ str(summary(lm(x ~ 1)))
 
 ## Opening the toy database
 
-Open up the little to ydatabase
+Open up the little toy database
 ```R
 ls()
 rm(list=ls())
