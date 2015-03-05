@@ -248,6 +248,69 @@ plot(exp(log.tau), fitted(m3)); abline(0,1)
 
 ## Log-linear modeling basics
 
+We have observations that follow a Poisson distribution with mean lambda
+```R
+n <- 100
+Y <- rpois(n, lambda=5)
+plot(table(Y))
+```
+
+Write maximum likelihood estimation for lambda, check out pmf
+http://en.wikipedia.org/wiki/Poisson_distribution
+```R
+lam_try <- seq(0, 10, by=0.01)
+L <- sapply(lam_try, function(lam) prod(lam^Y * exp(-lam) / factorial(Y)))
+
+op <- par(mfrow=c(2,2))
+plot(lam_try, L, type="l")
+abline(v=5, col=2)
+abline(v=lam_try[which.max(L)], col=4)
+
+plot(log(lam_try), L, type="l")
+abline(v=log(5), col=2)
+abline(v=log(lam_try[which.max(L)]), col=4)
+
+plot(lam_try, log(L), type="l")
+abline(v=5, col=2)
+abline(v=lam_try[which.max(L)], col=4)
+plot(log(lam_try), log(L), type="l")
+abline(v=log(5), col=2)
+abline(v=log(lam_try[which.max(L)]), col=4)
+par(op)
+```
+
+What does it have to do with abundance estimation?
+```R
+D <- 1
+A <- 1^2 * pi
+N <- rpois(n, lambda=D*A)
+table(N)
+neglogL <- sapply(lam_try, function(lam) -sum(dpois(N, lam, log=TRUE)))
+
+plot(log(lam_try), neglogL, type="l")
+abline(v=log(D*A), col=2)
+abline(v=log(lam_try[which.min(neglogL)]), col=4)
+
+log(lam_try[which.min(neglogL)])
+coef(glm(N ~ 1, family=poisson))
+```
+
+Rationale for offsets
+
+```R
+p <- 0.8 # probability of singing
+q <- 0.9 # probability of detection
+Y <- rbinom(n, N, p*q)
+image(-table(Y, N))
+abline(0,1)
+
+exp(coef(glm(N ~ 1, family=poisson)))
+(est <- exp(coef(glm(Y ~ 1, family=poisson))))
+est / (p*q)
+
+off <- rep(log(p*q), n)
+exp(coef(glm(Y ~ 1, family=poisson, offset=off)))
+```
 
 ## Using QPAD based offsets in modeling
  
