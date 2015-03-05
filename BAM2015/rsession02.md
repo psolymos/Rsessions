@@ -131,12 +131,43 @@ dim(y)
 ## 2 join operations
 Mefa(y, d[d$YYYY > 2005,]) # join="left" as default
 Mefa(y, d[d$YYYY > 2005,], join="inner")
-
 ```
 
+### Accessing components, subsetting
 
+```R
+str(m)
+str(taxa(m))
+str(samp(m))
+str(taxa(m))
 
+(m[samp(m)$YYYY > 2005,])
+```
 
+### Data aggregation
+
+Loops, `*lapply` and `aggregate` are able to handle
+general cases but take awfully long time.
+
+We are interested in sums and means, that is simple, and should not
+take long:
+
+```R
+system.time(aggregate(as.matrix(xtab(m)), list(samp(m)$SS), sum))
+system.time(groupSums(xtab(m), 1, samp(m)$SS))
+
+system.time(aggregate(as.matrix(xtab(m)), list(samp(m)$SS), mean))
+system.time(groupMeans(xtab(m), 1, samp(m)$SS))
+
+yy <- groupSums(xtab(m), 1, samp(m)$SS)
+dim(yy)
+nlevels(samp(m)$SS)
+
+dd <- nonDuplicated(samp(m), SS, change.rownames=TRUE)
+dim(dd)
+
+(mm <- Mefa(yy, dd))
+```
 
 ## Estimating QPAD model parameters
 
