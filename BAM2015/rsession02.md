@@ -7,7 +7,7 @@ This session cover the following topics:
 * [reshaping species data](#reshaping-species-data)
 * [estimating QPAD model parameters](#estimating-qpad-model-parameters)
 * [log-linear modeling basics](#log-linear-modeling-basics)
-* [using QPAD based offsets in modeling](#using-QPAD-based-offsets-in-modeling)
+* [using QPAD based offsets in modeling](#using-qpad-based-offsets-in-modeling)
 
 ## Using RStudio
 
