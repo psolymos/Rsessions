@@ -314,3 +314,70 @@ exp(coef(glm(Y ~ 1, family=poisson, offset=off)))
 
 ## Using QPAD based offsets in modeling
  
+```R
+load_BAM_QPAD(version=1)
+getBAMspecieslist()
+getBAMspeciestable()
+getBAMmodellist()
+```
+
+Species specific model summaries
+```R
+summaryBAMspecies("OVEN")
+bestmodelBAMspecies("OVEN", type="AIC")
+bestmodelBAMspecies("OVEN", type="BIC")
+bestmodelBAMspecies("OVEN", type="multi")
+```
+
+It is also possible to print out other model combinations 
+or to get all possible models compared
+```R
+summaryBAMspecies("OVEN", model.sra=8, model.edr=1)
+selectmodelBAMspecies("OVEN")
+```
+
+### Example data analysis
+
+Defining the predictors
+
+```R
+oven$JDAY <- oven$julian / 365
+oven$TSSR <- ((oven$timeday/8) - .75) / 24
+oven$xlat <- as.numeric(scale(oven$lat)) # latitude is standardized
+oven$xlong <- as.numeric(scale(oven$long)) # longitude is standardized
+oven$dur <- 3
+oven$dist <- Inf
+pf <- oven$pforest
+pd <- oven$pdecid
+pc <- pf - pd
+oven$LCC <- factor(5, levels=1:5)     # 5=OH open habitat
+oven$LCC[pf > 0.25 & pc > pd]  <- "3" # 3=SC dense conifer
+oven$LCC[pf > 0.25 & pc <= pd] <- "4" # 4=SD sparse deciduous
+oven$LCC[pf > 0.6 & pc > pd]   <- "1" # 1=DC dense conifer
+oven$LCC[pf > 0.6 & pc <= pd]  <- "2" # 2=DC dense deciduous
+table(oven$LCC)
+```
+
+Here is how one can calculate the offsets based on the estimates 
+without covariate effects:
+```R
+bc0 <- with(oven, globalBAMcorrections("OVEN", t=dur, r=dist))
+summary(bc0)
+```
+
+The offsets based on possible covariate effects can be calculated as:
+
+```R
+bm <- bestmodelBAMspecies("OVEN", type="BIC")
+bc <- with(oven, localBAMcorrections("OVEN", t=dur, r=dist,
+    jday=JDAY, tssr=TSSR, tree=pforest, lcc=LCC, 
+    model.sra=bm$sra, model.edr=bm$edr))
+summary(bc)
+```
+
+### Poisson GLM with offsets
+
+```R
+summary(mod <- glm(count ~ pforest + xlong, oven, family=poisson("log"), 
+    offset=corrections2offset(bc)))
+```
