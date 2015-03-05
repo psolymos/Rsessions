@@ -146,7 +146,7 @@ str(taxa(m))
 
 ### Data aggregation
 
-Loops, `*lapply` and `aggregate` are able to handle
+Loops, `*apply` and `aggregate` are able to handle
 general cases but take awfully long time.
 
 We are interested in sums and means, that is simple, and should not
@@ -171,6 +171,80 @@ dim(dd)
 
 ## Estimating QPAD model parameters
 
+See also: http://dcr.r-forge.r-project.org/qpad/QPAD_SupportingInfo.pdf
+
+```R
+library(detect)
+
+simfun1 <- function(n = 10, phi = 0.1, c=1, tau=0.8, type="rem") {
+    if (type=="dis") {
+        Dparts <- matrix(c(0.5, 1, NA,
+                      0.5, 1, Inf,
+                      1, Inf, NA), 3, 3, byrow=TRUE)
+        D <- Dparts[sample.int(3, n, replace=TRUE),]
+        CP <- 1-exp(-(D/tau)^2)
+    } else {
+        Dparts <- matrix(c(5, 10, NA,
+                      3, 5, 10,
+                      3, 5, NA), 3, 3, byrow=TRUE)
+        D <- Dparts[sample.int(3, n, replace=TRUE),]
+        CP <- 1-c*exp(-D*phi)
+    }
+    k <- ncol(D)
+    P <- CP - cbind(0, CP[, -k, drop=FALSE])
+    Psum <- rowSums(P, na.rm=TRUE)
+    PPsum <- P / Psum
+    Pok <- !is.na(PPsum)
+    N <- rpois(n, 10)
+    Y <- matrix(NA, ncol(PPsum), nrow(PPsum))
+    Ypre <- sapply(1:n, function(i) rmultinom(1, N, PPsum[i,Pok[i,]]))
+    Y[t(Pok)] <- unlist(Ypre)
+    Y <- t(Y)
+    list(Y=Y, D=D)
+}
+
+n <- 200
+x <- rnorm(n)
+X <- cbind(1, x)
+
+## removal, constant
+vv <- simfun1(n=n, phi=exp(-1.5))
+str(vv)
+head(vv$Y)
+head(vv$D)
+
+m1 <- cmulti(vv$Y | vv$D ~ 1, type="rem")
+coef(m1)
+
+## removal, not constant
+log.phi <- X %*% c(-2,-1)
+vv <- simfun1(n=n, phi=exp(cbind(log.phi, log.phi, log.phi)))
+m1 <- cmulti(vv$Y | vv$D ~ x, type="rem")
+coef(m1)
+
+## dist, constant
+vv <- simfun1(n=n, tau=exp(-0.2), type="dis")
+head(vv$Y)
+head(vv$D)
+m3 <- cmulti(vv$Y | vv$D ~ 1, type="dis")
+coef(m3)
+
+## dist, not constant
+log.tau <- X %*% c(-0.5,-0.2)
+vv <- simfun1(n=n, tau=exp(cbind(log.tau, log.tau, log.tau)), type="dis")
+m3 <- cmulti(vv$Y | vv$D ~ x, type="dis")
+coef(m3)
+
+summary(m3)
+coef(m3)
+vcov(m3)
+AIC(m3)
+confint(m3)
+logLik(m3)
+
+## fitted values
+plot(exp(log.tau), fitted(m3)); abline(0,1)
+```
 
 ## Log-linear modeling basics
 
