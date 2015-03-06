@@ -364,7 +364,7 @@ table(oven$LCC)
 Here is how one can calculate the offsets based on the estimates 
 without covariate effects:
 ```R
-bc0 <- with(oven, globalBAMcorrections("OVEN", t=3, r=Inf))
+bc0 <- with(oven, globalBAMcorrections("OVEN", t=dur, r=dist))
 summary(bc0)
 ```
 
