@@ -86,12 +86,17 @@ example(Xtab)
 ```R
 ## 2-way table: PKEY x SPECIES with ABUND
 y <- Xtab(ABUND ~ PKEY + SPECIES, PCTBL)
+
+print(object.size(y), units="Mb")
+print(object.size(as.matrix(y)), units="Mb")
+print(object.size(PCTBL[,c("ABUND", "PKEY", "SPECIES")]), units="Mb")
+
 head(y)
 dim(y)
 nlevels(PCTBL$PKEY)
 nlevels(PCTBL$SPECIES)
 
-table(y[,"OVEN"])
+table(y[,"CAWA"])
 plot(table(y[,"OVEN"]))
 colSums(as.matrix(y))
 ## exclude unknowns
@@ -101,9 +106,6 @@ dim(y)
 y <- y[,substr(colnames(y), 1, 2) != "UN"]
 dim(y)
 
-print(object.size(y), units="Mb")
-print(object.size(as.matrix(y)), units="Mb")
-print(object.size(PCTBL[,c("ABUND", "PKEY", "SPECIES")]), units="Mb")
 ## how can y be smaller than the long-format data frame?
 str(y)
 
@@ -127,6 +129,7 @@ rownames(SS) <- SS$SS
 d <- data.frame(PKEY, SS[match(PKEY$SS, SS$SS),])
 dim(d)
 dim(y)
+all(rownames(d)==rownames(y))
 (m <- Mefa(y, d))
 ## 2 join operations
 Mefa(y, d[d$YYYY > 2005,]) # join="left" as default
@@ -137,11 +140,11 @@ Mefa(y, d[d$YYYY > 2005,], join="inner")
 
 ```R
 str(m)
-str(taxa(m))
+str(xtab(m))
 str(samp(m))
 str(taxa(m))
 
-(m[samp(m)$YYYY > 2005,])
+m[samp(m)$YYYY > 2005,]
 ```
 
 ### Data aggregation
@@ -299,7 +302,7 @@ Rationale for offsets
 
 ```R
 p <- 0.8 # probability of singing
-q <- 0.9 # probability of detection
+q <- 0.5 # probability of detection
 Y <- rbinom(n, N, p*q)
 image(-table(Y, N))
 abline(0,1)
@@ -351,7 +354,7 @@ pf <- oven$pforest
 pd <- oven$pdecid
 pc <- pf - pd
 oven$LCC <- factor(5, levels=1:5)     # 5=OH open habitat
-oven$LCC[pf > 0.25 & pc > pd]  <- "3" # 3=SC dense conifer
+oven$LCC[pf > 0.25 & pc > pd]  <- "3" # 3=SC sparse conifer
 oven$LCC[pf > 0.25 & pc <= pd] <- "4" # 4=SD sparse deciduous
 oven$LCC[pf > 0.6 & pc > pd]   <- "1" # 1=DC dense conifer
 oven$LCC[pf > 0.6 & pc <= pd]  <- "2" # 2=DC dense deciduous
@@ -361,7 +364,7 @@ table(oven$LCC)
 Here is how one can calculate the offsets based on the estimates 
 without covariate effects:
 ```R
-bc0 <- with(oven, globalBAMcorrections("OVEN", t=dur, r=dist))
+bc0 <- with(oven, globalBAMcorrections("OVEN", t=3, r=Inf))
 summary(bc0)
 ```
 
