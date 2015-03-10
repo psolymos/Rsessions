@@ -62,7 +62,8 @@ DURINT
 ## 11=0-20
 ## 3=before or after
 ## 8=unk
-PCTBL <- PCTBL[!(PCTBL$DURATION %in% c(10,11,3,8)),]
+## 9=10-15
+PCTBL <- PCTBL[!(PCTBL$DURATION %in% c(10,11,3,8,9)),]
 ```
 
 Note: subsetting does not affect factor levels even when complete cases
