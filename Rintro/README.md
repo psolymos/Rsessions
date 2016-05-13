@@ -65,3 +65,7 @@ If time allows, we might consider some of the following topics:
 
 * Basic plotting capabilities in R
 * Generating reports using R markdown, knitr, and Rstudio
+
+## Recoding
+
+Record the workshop if possible (screen capture + another camera).
