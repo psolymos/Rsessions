@@ -6,3 +6,5 @@
 * How to find mismatch (compare_sets)
 * memory size comparisons (factor vs character)
 * conversion: integer, numeric, factor, character types.
+
+[dplyr](https://cran.r-project.org/web/packages/dplyr/vignettes/two-table.html)
