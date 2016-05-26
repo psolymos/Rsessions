@@ -9,3 +9,5 @@
 * Excel turning values into dates (e.g. 0-3 OK, but 3-5 is 05-Mar)
 
 [dplyr](https://cran.r-project.org/web/packages/dplyr/vignettes/two-table.html)
+
+paste/paste0 vs interaction
